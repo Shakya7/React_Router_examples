@@ -12,12 +12,21 @@ function Home(){
   )
 }
 
-function Result(){
+function Result(props){
+  console.log(props.ddd);
   return(
     <div>
       <h5>The current form values are: </h5>
       <div>
-        hmmmmm....
+        {<div>{"{"}
+          <p style={{marginLeft:"50px"}}>{`"toppings": [${props.ddd.toppings}],`}</p>
+          <p style={{marginLeft:"50px"}}>{`"crust": ${props.ddd.crust},`}</p>
+          <p style={{marginLeft:"50px"}}>{`"extraCheese": ${props.ddd.extraCheese}`}</p>
+          {"}"}
+        </div>  
+        }
+          
+        
       </div>
     </div>
   )
@@ -38,10 +47,6 @@ function Error(props){
 
 function App() {
 
-  const [dataPep, setDataPep]=useState(false);
-  const [dataBell, setDataBell]=useState(false);
-  const [dataOl, setDataOl]=useState(false);
-
   const [url,setUrl]=useSearchParams({
     toppings:"",
     crust: "",
@@ -55,22 +60,11 @@ function App() {
   })
 
   useEffect(()=>{
-    console.log(url.get("toppings"));
-    console.log(dataPep, dataBell, dataOl);
-    console.log(Object.fromEntries([...url]));
+    if(!stateData.toppings[0])
+      stateData.toppings.shift()
     console.log(stateData);
-    const arrayToppings=url.get("toppings").split(",");
-    console.log(arrayToppings);
-    if(arrayToppings.includes("pepperoni"))
-      setDataPep(true);
-    if(arrayToppings.includes("bell-peppers"))  
-      setDataBell(true);
-    if(arrayToppings.includes("olives"))  
-      setDataOl(true);
-    console.log(dataPep, dataBell, dataOl);
-
     
-  },[Object.fromEntries([...url]),stateData,dataPep,dataBell,dataOl]);
+  },[Object.fromEntries([...url]),stateData]);
 
   /*const handleData=(e)=>{
     setDataPep((prev)=>!prev);
@@ -309,7 +303,7 @@ function App() {
       {/*Here we dont have to include the Outlet component*/}
       <Routes>
         <Route path="/" element={<Home/>}>
-          <Route index element={<Result/>}/>
+          <Route index element={<Result ddd={stateData}/>}/>
         </Route>  
         <Route path="*" element={<Error/>}/>
       </Routes>
